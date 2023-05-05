@@ -1,0 +1,113 @@
+@import "../../styles";
+
+.container {
+  @include flex(row, stretch);
+  height: calc(100vh - 6.4rem);
+  overflow: hidden;
+
+  & > .right {
+    flex: 1;
+    height: 100%;
+    overflow: auto;
+
+    @include desktop {
+      height: 100vh;
+    }
+
+    & > .input {
+      @include position(fixed, unset, unset, unset, 1.5rem);
+      z-index: 98;
+      width: calc(100%);
+
+      @include desktop {
+        width: 100%;
+      }
+      & > form {
+        width: 50%;
+        margin: 0 auto;
+        position: relative;
+        @include l-desktop {
+          width: 75%;
+        }
+        @include desktop {
+          width: 90%;
+        }
+
+        & > input {
+          width: 100%;
+          @include border($light-gray);
+          outline: none;
+          padding: 1.2rem 2.4rem;
+          background-color: transparent;
+          @include radius(0.5rem);
+          background-color: $white;
+
+          &:focus {
+            border-color: $dark;
+          }
+        }
+
+        & > button {
+          @include position(absolute, 50%, unset, 2.4rem);
+          transform: translateY(-50%);
+          @include center();
+          background-color: transparent;
+          border: none;
+          outline: none;
+          cursor: pointer;
+          font-size: 2rem;
+          color: $dark;
+          &:hover {
+            opacity: 0.8;
+          }
+        }
+      }
+    }
+
+    & > .messages {
+      width: 50%;
+      margin: 0 auto;
+      min-height: 100%;
+      padding: 2.4rem 2.4rem 2.4rem + 4.6rem + 1.5rem;
+      @include flex(column, stretch, flex-end, 1.6rem);
+      @include l-desktop {
+        width: 75%;
+      }
+      @include desktop {
+        width: 90%;
+      }
+      & > .message {
+        @include flex(row, center, flex-start);
+        &.me {
+          @include flex(row, center, flex-end);
+          & > div {
+            background-color: $success;
+            color: $white;
+          }
+        }
+
+        & > div {
+          max-width: 60%;
+          min-width: 4rem;
+          background-color: $light;
+          padding: 0.8rem 0.8rem 2.4rem;
+          @include radius(0.5rem);
+          position: relative;
+
+          & > span {
+            opacity: 0.7;
+            @include position(absolute, unset, unset, 0.8rem, 0.8rem);
+          }
+        }
+      }
+    }
+
+    @include desktop {
+      &.open {
+        & > .header {
+          display: flex;
+        }
+      }
+    }
+  }
+}

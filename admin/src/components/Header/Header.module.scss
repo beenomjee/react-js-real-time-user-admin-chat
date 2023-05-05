@@ -1,0 +1,78 @@
+@import "../../styles";
+
+.menu {
+  & > .bgWrapper {
+    @include position(fixed, 0, 0, 0, 0);
+    z-index: 101;
+    display: none;
+    &.open {
+      display: block;
+    }
+  }
+  & > .menuContainer {
+    @include position(absolute, calc(100% + 0.5rem), 0);
+    z-index: 102;
+    background-color: $light;
+    @include shadow($shadow-color);
+    padding: 1.2rem 0;
+    @include radius(0.5rem);
+    width: 70vw;
+    max-width: 20rem;
+    transform-origin: 0 0;
+    transform: scale(0);
+    transition: transform 0.15s;
+    &.open {
+      transform: scale(1);
+    }
+
+    & > button {
+      background-color: transparent;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      width: 100%;
+      padding: 1.2rem 2.4rem;
+      &:hover {
+        background-color: $light-gray;
+      }
+    }
+  }
+}
+
+.container {
+  @include flex(row, $gap: 2rem);
+  padding: 1.2rem 2.4rem;
+  background-color: $light;
+  @include position(sticky, 0, 0);
+  z-index: 100;
+  @include shadow($light-gray);
+  & > .left {
+    @include center();
+    position: relative;
+    & > button {
+      @include center();
+      border: none;
+      background-color: transparent;
+      outline: none;
+      cursor: pointer;
+      @include font(2.5rem);
+    }
+  }
+  & > .right {
+    user-select: none;
+    @include flex(row, center, flex-end, 1.6rem);
+    & > img {
+      @include avatar(4rem);
+    }
+    & > span {
+      @include font(1.4rem, 500);
+      @include text($dark);
+    }
+  }
+
+  @include desktop {
+    &.close {
+      display: none;
+    }
+  }
+}
