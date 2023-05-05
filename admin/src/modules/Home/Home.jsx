@@ -3,17 +3,38 @@ import styles from './Home.module.scss';
 import { Header, Loader2 } from '../../components';
 import { MdOutlineKeyboardBackspace, MdSend } from 'react-icons/md'
 import axios from 'axios';
+import { db, sendMessage } from '../../firebase';
+import { collection, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 
 const Home = ({ user }) => {
     const [id, setId] = useState('');
     const [allUsers, setAllUsers] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoading2, setIsLoading2] = useState(false);
+    const [isLoading3, setIsLoading3] = useState(false);
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [searchText, setSearchText] = useState('')
     const [message, setMessage] = useState('')
-    const handleUserId = (id) => {
+    const [conversation, setConversation] = useState({});
+    const [allMessages, SetallMessages] = useState([]);
+
+    const handleUserId = async (userId) => {
+        if (userId === id) return;
         setSearchText('');
-        setId(id);
+        setId(userId);
+        setIsLoading2(true);
+        try {
+            const { data } = await axios.post('http://localhost:3000/api/v1/conversation/start', {
+                token: user.token,
+                member: userId
+            })
+            setConversation(data);
+            setIsLoading2(false);
+        } catch (err) {
+            alert(err.message);
+            console.log(err);
+            setIsLoading2(false);
+        }
     }
 
     const handleSearchChange = (e) => {
@@ -22,9 +43,35 @@ const Home = ({ user }) => {
         setFilteredUsers(allUsers.filter(user => user.email.startsWith(searchText)));
     }
 
-    const handleMessageSubmit = (e) => {
+    const handleMessageSubmit = async (e) => {
+        if (isLoading3) return;
         e.preventDefault();
+        setIsLoading3(true);
+        try {
+            await sendMessage({ conversationId: conversation._id, message, receiverId: id });
+            setMessage('');
+            setIsLoading3(false);
+        } catch (err) {
+            alert(err.message);
+            console.log(err);
+            setIsLoading3(false);
+        }
     }
+
+    useEffect(() => {
+        if (conversation._id) {
+            const collectionRef = collection(db, "messages");
+            const q = query(collectionRef, where("conversationId", "==", conversation._id), orderBy("createdAt"));
+            const unsubscribe = onSnapshot(q, (snapshot) => {
+                SetallMessages(snapshot.docs.map(doc => ({
+                    ...doc.data(),
+                    _id: doc.id
+                })));
+            })
+
+            return () => unsubscribe();
+        }
+    }, [conversation]);
 
     useEffect(() => {
         setIsLoading(true);
@@ -78,50 +125,47 @@ const Home = ({ user }) => {
                     </div>
                 </div>
                 {
-                    id ? <div className={`${styles.right} ${id ? styles.open : ''}`}>
-                        <div className={styles.header}>
-                            <button onClick={() => setId('')} className={styles.icon}><MdOutlineKeyboardBackspace /></button>
-                            <div className={styles.user}>
-                                <img src="/avatar.png" alt="AVATAR" />
-                                <div className={styles.info}>
-                                    <p>Muneeb</p>
-                                    <span>beenomjee@gmail.com</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className={styles.input}>
-                            <form action="#" onSubmit={handleMessageSubmit}>
-                                <input type="text" required placeholder='Type a Message' value={message} onChange={(e) => setMessage(e.target.value)} />
-                                <button><MdSend /></button>
-                            </form>
-                        </div>
-
-                        <div className={styles.messages}>
-                            {
-                                Array(20).fill(0).map((_, index) => (
-                                    <>
-                                        <div key={index + '1'} className={styles.message}>
-                                            <div>
-                                                <p>i am at ease</p>
-                                                <span>08:12</span>
-                                            </div>
-                                        </div>
-                                        <div key={index + "2000"} className={`${styles.message} ${styles.me}`}>
-                                            <div>
-                                                <p>i am at ease</p>
-                                                <span>08:12</span>
-                                            </div>
-                                        </div>
-                                    </>
-                                ))
-                            }
-                        </div>
+                    isLoading2 ? <div className={`${styles.right}`}>
+                        <p><Loader2 /></p>
                     </div>
-
-                        : <div className={`${styles.right}`}>
+                        :
+                        !id ? <div className={`${styles.right}`}>
                             <p>Not any chat selected!</p>
                         </div>
+                            :
+                            <div className={`${styles.right} ${id ? styles.open : ''}`}>
+                                <div className={styles.header}>
+                                    <button onClick={() => setId('')} className={styles.icon}><MdOutlineKeyboardBackspace /></button>
+                                    <div className={styles.user}>
+                                        <img src="/avatar.png" alt="AVATAR" />
+                                        <div className={styles.info}>
+                                            <p>Muneeb</p>
+                                            <span>beenomjee@gmail.com</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className={styles.input}>
+                                    <form action="#" onSubmit={handleMessageSubmit}>
+                                        <input type="text" required placeholder='Type a Message' value={message} onChange={(e) => setMessage(e.target.value)} />
+                                        <button>{isLoading3 ? <Loader2 /> : <MdSend />}</button>
+                                    </form>
+                                </div>
+
+                                <div className={styles.messages}>
+                                    {
+                                        allMessages.map((message, index) => (
+                                            <div key={index} className={`${styles.message} ${(message.receiverId != user._id ? styles.me : '')}`}>
+                                                <div>
+                                                    <p>{message.message}</p>
+                                                    <span>{message.createdAt && `${message?.createdAt?.toDate().getHours()}:${message?.createdAt?.toDate().getMinutes()}`}</span>
+                                                </div>
+                                            </div>
+
+                                        ))
+                                    }
+                                </div>
+                            </div>
                 }
             </div>
         </>

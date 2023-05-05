@@ -26,7 +26,7 @@ const SignIn = () => {
             navigate('/');
         } catch (err) {
             console.log(err);
-            setError(err.response.data);
+            setError(err.response.data.message);
             setIsLoading(false);
         }
     }

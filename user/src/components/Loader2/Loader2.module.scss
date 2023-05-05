@@ -1,0 +1,24 @@
+@import "../../styles";
+
+.loader {
+  @include center();
+  span {
+    color: $dark;
+    animation: rotateAni 0.2s ease-in-out infinite;
+    display: inline-block;
+    width: 2rem;
+    aspect-ratio: 1/1;
+    @include font(2rem);
+    transform-origin: center center;
+    @include center();
+  }
+}
+
+@keyframes rotateAni {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

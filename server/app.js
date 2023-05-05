@@ -1,7 +1,7 @@
 import express from "express";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
-import { authRouter } from "./routes/index.js";
+import { authRouter, conversationRouter } from "./routes/index.js";
 import dotenv from "dotenv";
 import cors from "cors";
 
@@ -15,5 +15,6 @@ app.use(express.json({ limit: "1mb" }));
 
 // routes
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/conversation", conversationRouter);
 
 export default app;

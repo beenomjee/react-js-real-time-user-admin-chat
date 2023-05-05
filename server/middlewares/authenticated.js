@@ -1,7 +1,7 @@
 import { User } from "../db/index.js";
 import jwt from "jsonwebtoken";
 
-const isAdmin = async (req, res, next) => {
+const isAuthenticated = async (req, res, next) => {
   try {
     let { token } = req.query;
     if (!token) token = req.body.token;
@@ -12,7 +12,7 @@ const isAdmin = async (req, res, next) => {
 
     const _id = jwt.verify(token, process.env.SECRET_KEY);
     const user = await User.findById(_id);
-    if (!user || !user.isAdmin) {
+    if (!user) {
       res.cookie("token", "");
       return res.status(404).json({
         message: "Not Authenticated User!",
@@ -28,4 +28,4 @@ const isAdmin = async (req, res, next) => {
   }
 };
 
-export default isAdmin;
+export default isAuthenticated;

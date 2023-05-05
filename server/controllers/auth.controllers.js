@@ -43,6 +43,7 @@ export const signUpController = async (req, res) => {
       lName: user.lName,
       email: user.email,
       file: user.file,
+      _id: user._id,
       token,
     });
   } catch (err) {
@@ -82,6 +83,7 @@ export const signInController = async (req, res) => {
       lName: user.lName,
       email: user.email,
       file: user.file,
+      _id: user._id,
       token,
     });
   } catch (err) {
@@ -95,7 +97,9 @@ export const signInController = async (req, res) => {
 export const getAllUsers = async (req, res) => {
   try {
     //   get user from db!
-    let users = await User.find().select("-password -isAdmin -__v");
+    let users = await User.find({ isAdmin: { $ne: true } }).select(
+      "-password -isAdmin -__v"
+    );
     return res.status(200).json(users);
   } catch (err) {
     console.log(err);
