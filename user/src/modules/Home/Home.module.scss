@@ -4,6 +4,70 @@
   @include flex(row, stretch);
   height: calc(100vh - 6.4rem);
   overflow: hidden;
+  & > .left {
+    height: 100%;
+    width: 40rem;
+    overflow-y: auto;
+    border-right: 1px solid $light-gray;
+    @include desktop {
+      width: 100%;
+      @include position(fixed, 6.4rem, 0rem);
+      background-color: $white;
+      z-index: 99;
+      height: calc(100% - 6.4rem);
+      transition: transform 0.2s;
+      &.close {
+        transform: translateX(-100%);
+      }
+    }
+    & > .top {
+      padding: 2.4rem;
+      & > input {
+        background-color: $light;
+        border: none;
+        outline: none;
+        width: 100%;
+        padding: 1.2rem 2.4rem;
+        @include radius(1000rem);
+
+        &:focus,
+        &:hover {
+          background-color: $light-gray;
+        }
+      }
+    }
+    & > .bottom {
+      & > div {
+        @include flex(row, center, flex-start, 1rem);
+        padding: 0.6rem 2.4rem;
+        &:hover,
+        &.selected {
+          background-color: $light;
+          cursor: pointer;
+          user-select: none;
+        }
+        & > img {
+          @include avatar(4.5rem);
+        }
+        & > .info {
+          & > p {
+            color: $dark;
+            @include font(1.2rem, 500);
+          }
+          & > span {
+            color: $dark;
+            opacity: 0.7;
+            @include font(1.1rem);
+          }
+        }
+      }
+      & > p {
+        padding: 0rem 2.4rem;
+        @include font(1.2rem, 500);
+        @include text($danger, center);
+      }
+    }
+  }
 
   & > .right {
     flex: 1;
@@ -12,23 +76,62 @@
 
     @include desktop {
       height: 100vh;
+      &.open {
+        & > .header {
+          display: flex;
+        }
+      }
+    }
+
+    & > .header {
+      padding: 0.6rem 2.4rem;
+      @include flex(row, center, flex-start, 1.6rem);
+      background-color: $light;
+      @include position(sticky, 0, 0);
+      z-index: 100;
+      display: none;
+
+      & > button {
+        cursor: pointer;
+        @include center();
+        background-color: transparent;
+        border: none;
+        outline: none;
+        @include font(2rem);
+        color: $dark;
+      }
+      & > .user {
+        @include flex(row, center, flex-start, 1rem);
+        user-select: none;
+        & > img {
+          @include avatar(4.5rem);
+        }
+        & > .info {
+          & > p {
+            color: $dark;
+            @include font(1.2rem, 500);
+          }
+          & > span {
+            color: $dark;
+            opacity: 0.7;
+            @include font(1.1rem);
+          }
+        }
+      }
     }
 
     & > .input {
       @include position(fixed, unset, unset, unset, 1.5rem);
       z-index: 98;
-      width: calc(100%);
+      width: calc(100% - 40rem);
 
       @include desktop {
         width: 100%;
       }
       & > form {
-        width: 50%;
+        width: 70%;
         margin: 0 auto;
         position: relative;
-        @include l-desktop {
-          width: 75%;
-        }
         @include desktop {
           width: 90%;
         }
@@ -65,6 +168,7 @@
           &:hover {
             opacity: 0.8;
           }
+
           &.img {
             right: unset;
             left: 2.4rem;
@@ -74,17 +178,13 @@
     }
 
     & > .messages {
-      width: 50%;
+      width: 70%;
       margin: 0 auto;
       min-height: 100%;
       padding: 2.4rem 2.4rem 2.4rem + 4.6rem + 1.5rem;
       @include flex(column, stretch, flex-end, 1.6rem);
-      @include l-desktop {
-        width: 75%;
-      }
       @include desktop {
         width: 90%;
-        padding: 2.4rem 2.4rem 14.5rem;
       }
       & > .message {
         @include flex(row, center, flex-start);
@@ -103,12 +203,10 @@
           padding: 0.8rem 0.8rem 2.4rem;
           @include radius(0.5rem);
           position: relative;
-
           & > p > img {
             width: 100%;
             border-radius: 0.5rem;
           }
-
           & > span {
             opacity: 0.7;
             @include position(absolute, unset, unset, 0.8rem, 0.8rem);
@@ -117,12 +215,11 @@
       }
     }
 
-    @include desktop {
-      &.open {
-        & > .header {
-          display: flex;
-        }
-      }
+    & > p {
+      height: 100%;
+      @include center();
+      transform: translateY(-5rem);
+      @include font(1.4rem, 500);
     }
   }
 }

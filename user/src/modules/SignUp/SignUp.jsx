@@ -49,6 +49,7 @@ const SignUp = () => {
             setIsLoading(false);
         }
     }
+
     useEffect(() => {
         const user = window.localStorage.getItem('user');
         if (!user)

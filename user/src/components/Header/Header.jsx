@@ -18,19 +18,19 @@ const Menu = ({ isMenuOpen, handleClose }) => {
         </div>
     )
 }
-const Header = ({ user }) => {
+const Header = ({ id, user }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const handleClose = () => {
         setIsMenuOpen(false);
     }
     return (
-        <div className={`${styles.container}`}>
+        <div className={`${styles.container} ${id ? styles.close : ''}`}>
             <div className={styles.left}>
                 <button onClick={() => setIsMenuOpen(true)} className={styles.icon}><IoIosMenu /></button>
                 <Menu isMenuOpen={isMenuOpen} handleClose={handleClose} />
             </div>
             <div className={styles.right}>
-                <img src={user.file ? user.file : "/avatar.png"} alt={`${user.fName} ${user.lName}`} />
+                <img src={user.file ? user.file : '/avatar.png'} alt="AVATAR" />
                 <span>{`${user.fName} ${user.lName}`}</span>
             </div>
         </div>

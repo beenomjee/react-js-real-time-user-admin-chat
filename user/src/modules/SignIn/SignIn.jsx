@@ -26,7 +26,7 @@ const SignIn = () => {
             navigate('/');
         } catch (err) {
             console.log(err);
-            setError(err.response.data.message);
+            setError(err.response.data);
             setIsLoading(false);
         }
     }
@@ -38,6 +38,7 @@ const SignIn = () => {
         else
             navigate('/')
     }, []);
+
     useEffect(() => {
         if (emailInputRef.current)
             emailInputRef.current.focus();
