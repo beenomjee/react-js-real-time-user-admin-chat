@@ -1,2 +1,2 @@
-export { db } from "./config";
-export { sendMessage } from "./message";
+export { db, storage } from "./config";
+export { sendMessage, sendImage } from "./message";

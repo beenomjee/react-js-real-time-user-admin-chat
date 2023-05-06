@@ -140,7 +140,7 @@
           width: 100%;
           @include border($light-gray);
           outline: none;
-          padding: 1.2rem 2.4rem;
+          padding: 1.2rem 6rem;
           background-color: transparent;
           @include radius(0.5rem);
           background-color: $white;
@@ -148,9 +148,14 @@
           &:focus {
             border-color: $dark;
           }
+
+          &.none {
+            display: none;
+          }
         }
 
-        & > button {
+        & > button,
+        & > label {
           @include position(absolute, 50%, unset, 2.4rem);
           transform: translateY(-50%);
           @include center();
@@ -162,6 +167,11 @@
           color: $dark;
           &:hover {
             opacity: 0.8;
+          }
+
+          &.img {
+            right: unset;
+            left: 2.4rem;
           }
         }
       }
@@ -193,7 +203,10 @@
           padding: 0.8rem 0.8rem 2.4rem;
           @include radius(0.5rem);
           position: relative;
-
+          & > p > img {
+            width: 100%;
+            border-radius: 0.5rem;
+          }
           & > span {
             opacity: 0.7;
             @include position(absolute, unset, unset, 0.8rem, 0.8rem);
@@ -207,6 +220,65 @@
       @include center();
       transform: translateY(-5rem);
       @include font(1.4rem, 500);
+    }
+  }
+}
+
+.bgWrapperCover {
+  @include position(fixed, 0, 0, 0, 0);
+  z-index: 103;
+}
+
+.modal {
+  @include position(absolute, unset, 0, unset, 0);
+  z-index: 104;
+  width: 40rem;
+  height: 25rem;
+  background-color: $white;
+  @include shadow($shadow-color);
+  @include radius(1rem);
+  transform: scaleY(0);
+  transform-origin: center bottom;
+  transition: transform 0.1s;
+  &.open {
+    transform: scaleY(1);
+  }
+  & > .top {
+    height: 20rem;
+    width: 100%;
+    padding: 1.2rem 2.4rem;
+    border-bottom: 1px solid $light-gray;
+    & > img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      @include radius(1rem);
+    }
+  }
+  & > .bottom {
+    height: 5rem;
+    width: 100%;
+    padding: 0.6rem 2.4rem;
+    @include flex(row, stretch);
+
+    & > button {
+      outline: none;
+      border: none;
+      padding: 0rem 1.2rem;
+      @include font(2rem);
+      @include center();
+      cursor: pointer;
+      @include radius(0.5rem);
+      @include text($dark);
+
+      &:first-child {
+        background-color: $light-gray;
+        color: $dark;
+      }
+      &:last-child {
+        background-color: $success;
+        color: $white;
+      }
     }
   }
 }
